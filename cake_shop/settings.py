@@ -21,9 +21,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'cake',
-    'user'
+    'user',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
@@ -98,3 +98,5 @@ STATICFILES_DIRS = (
 # LOGOUT_REDIRECT_URL = 'user:login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "user.User"
