@@ -12,7 +12,7 @@ env.read_env()
 
 @admin.register(Cake)
 class CakeAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('price',)
 
 
 @admin.register(Order)

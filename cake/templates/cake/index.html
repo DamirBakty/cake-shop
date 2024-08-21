@@ -89,28 +89,29 @@
 
                 <div class="col-12 col-sm-6 col-lg-4 d-flex flex-column align-items-center">
                     <div class="card border-0 cake__hover">
-                        <a href="#" class="card-img-overlay"></a>
+                        <a href="{% url 'cake:catalog_reason' 'tea' %}" class="card-img-overlay"></a>
                         <img src="{% static 'cake/img/image1.png' %}" alt="" class="">
                         <span class="cake_blue mt-4 fw-lighter mb-4 text-center">На чаепитие</span>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4 d-flex flex-column align-items-center">
                     <div class="card border-0 cake__hover">
-                        <a href="#" class="card-img-overlay"></a>
+                        <a href="{% url 'cake:catalog_reason' 'birthday' %}" class="card-img-overlay"></a>
                         <img src="{% static 'cake/img/image2.png' %}" alt="" class="">
                         <span class="cake_blue mt-4 fw-lighter mb-4 text-center">На день рождения</span>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4 d-flex flex-column align-items-center">
                     <div class="card border-0 cake__hover">
-                        <a href="#" class="card-img-overlay"></a>
+                        <a href="{% url 'cake:catalog_reason' 'wedding' %}" class="card-img-overlay"></a>
                         <img src="{% static 'cake/img/image3.png' %}" alt="" class="">
                         <span class="cake_blue mt-4 fw-lighter mb-4 text-center">На свадьбу</span>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center mt-2">
-                    <button class="btn text-white rounded-pill shadow-none cake__button cake__bg_pink">Открыть каталог
-                    </button>
+                    <form action="{% url 'cake:catalog' %}">
+                        <button class="btn text-white rounded-pill shadow-none cake__button cake__bg_pink">Открыть каталог</button>
+                    </form>
                 </div>
             </article>
 

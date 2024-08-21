@@ -86,6 +86,11 @@ class Cake(models.Model):
         ('marshmallow', 'маршмеллоу'),
         ('marzipan', 'марципан'),
     ]
+    REASONS = [
+        ('tea', 'На чаепитие'),
+        ('birthday', 'На день рождения'),
+        ('wedding', 'На свадьбу'),
+    ]
 
     title = models.CharField(
         'Название',
@@ -120,8 +125,20 @@ class Cake(models.Model):
         blank=True,
         null=True,
     )
-    price = models.FloatField('Цена', blank=True, null=True)
+    price = models.IntegerField('Цена', blank=True, null=True)
     is_base = models.BooleanField('Стандартный торт', default=False)
+    photo = models.ImageField(
+        upload_to='cakes/',
+        verbose_name='Фото',
+        default='../static/cake/img/default_cake.png',
+    )
+    reason = models.CharField(
+        'Причина',
+        max_length=50,
+        choices=REASONS,
+        blank=True,
+        null=True,
+    )
     objects = CakeQuerySet.as_manager()
 
     class Meta:
@@ -129,7 +146,21 @@ class Cake(models.Model):
         verbose_name_plural = 'Торты'
 
     def __str__(self):
-        return f'{self.title}'
+        if self.title == 'Пользовательский торт':
+            return f'{self.title} {self.id}'
+        return self.title
+
+    def save(self):
+        """Вычислить и записать стоимость торта при сохранении."""
+        price = (
+            EXTRA_PRICES['levels'][str(self.levels_number)] +
+            EXTRA_PRICES['shapes'][self.shape] +
+            EXTRA_PRICES['toppings'][self.topping] +
+            EXTRA_PRICES['berries'].get(self.berries, 0) +
+            EXTRA_PRICES['decor'].get(self.decor, 0)
+        )
+        self.price = price
+        super(Cake, self).save()
 
 
 class OrderQuerySet(models.QuerySet):
