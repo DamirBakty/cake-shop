@@ -6,12 +6,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class User(AbstractUser):
     """Модель пользователя."""
-    name = models.CharField(
-        verbose_name='Имя',
-        max_length=200,
-        help_text='Введите имя',
-        blank=False,
-    )
     phone = PhoneNumberField(
         verbose_name='телефон',
         region='RU',
@@ -19,15 +13,15 @@ class User(AbstractUser):
         null=False,
         unique=True,
     )
-    email = models.EmailField(
-        verbose_name='Адрес электронной почты',
-        help_text='Введите адрес электронной почты',
-        blank=True,
-        unique=True,
+    address = models.CharField(
+        verbose_name='Адрес',
+        max_length=200,
+        blank=False,
+        null=False,
     )
 
     def __str__(self):
-        return self.name
+        return self.username
 
     class Meta:
         verbose_name = 'Пользователь'

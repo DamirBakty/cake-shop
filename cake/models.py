@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -183,7 +184,15 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return f'Заказ клиента {self.user.name} {self.user.phone}'
+        return f'Заказ клиента {self.user.username} {self.user.phone}'
+
+    @admin.display(description='Адрес')
+    def get_address(self):
+        return self.user.address
+
+    @admin.display(description='Номер телефона')
+    def get_phone(self):
+        return self.user.phone
 
 
 class Advertising(models.Model):
