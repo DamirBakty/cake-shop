@@ -60,19 +60,19 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title cake_pink" id="ModalLabel2">{{ order.id }} {{order.cake.title}}</h5>
+                                            <h5 class="modal-title cake_pink" id="ModalLabel2">#{{ order.id }} {{order.cake.title}}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <span class="cake_blue">Уровней: {{ order.cake.levels_number }}</span><br>
-                                            <span class="cake_blue">Форма: {{ order.cake.shape }}</span><br>
+                                            <span class="cake_blue">Форма: {{ order.cake.get_shape_display }}</span><br>
                                             <span class="cake_blue">
                                                 Топпинг: 
                                                 {% if order.cake.topping == 'no_topping' %}
                                                     без
                                                 {% else %}
-                                                    {{ order.cake.topping }}
+                                                    {{ order.cake.get_topping_display }}
                                                 {% endif %}
                                             </span><br>
                                             <span class="cake_blue">
@@ -80,7 +80,7 @@
                                                 {% if order.cake.berries == 'no_berries' or order.cake.berries == None %}
                                                     нет
                                                 {% else %}
-                                                    {{ order.cake.berries }}
+                                                    {{ order.cake.get_berries_display }}
                                                 {% endif %}
                                             </span><br>
                                             <span class="cake_blue">
@@ -88,12 +88,13 @@
                                                 {% if order.cake.decor == 'no_decor' or order.cake.decor == None %}
                                                     нет
                                                 {% else %}
-                                                    {{ order.cake.decor }}
+                                                    {{ order.cake.get_decor_display }}
                                                 {% endif %}
                                             </span><br>
                                             <span class="cake_blue">
-                                                {% if order.cake.inscription %}
-                                                    {{ order.cake.inscription }}
+                                                Надпись: 
+                                                {% if order.inscription %}
+                                                    {{ order.inscription }}
                                                 {% else %}
                                                     Без надписи
                                                 {% endif %}
@@ -101,7 +102,7 @@
                                             <span class="cake_pink">Цена: {{ order.total_price }}₽</span>
                                         </div>
                                         <div class="modal-footer d-flex justify-content-between">
-                                            <span class="cake_blue d-flex">Статус: В доставке</span>
+                                            <span class="cake_blue d-flex">Статус: {{ order.get_status_display }}</span>
                                             <span class="cake_blue d-flex align-items-center">Время доставки: {{ order.delivery_time }}</span>
                                         </div>
                                     </div>
