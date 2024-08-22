@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from cake.models import Cake
+from cake.models import Cake, Order
 
 
 def index(request):
@@ -12,7 +12,12 @@ def account(request):
 
 
 def orders(request):
-    return render(request, 'cake/lk-order.html')
+    user = request.user
+    if request.user.is_authenticated:
+        orders = Order.objects.filter(user=user)
+        context = {'user': user, 'orders': orders}
+        return render(request, 'cake/lk-order.html', context)
+    return render(request, 'registration/template.html')
 
 
 def get_catalog(request, slug=None):
