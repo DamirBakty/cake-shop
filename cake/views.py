@@ -1,14 +1,11 @@
 import uuid
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from environs import Env
+from django.shortcuts import render, redirect, reverse
 from yookassa import Configuration, Payment
 
 from cake.models import Cake, Order
-
-env = Env()
-env.read_env()
+from cake_shop.settings import YOOKASSA_ACCOUNT_ID, YOOKASSA_SECRET_KEY
 
 
 def index(request):
@@ -25,7 +22,7 @@ def orders(request):
         orders = Order.objects.filter(user=user)
         context = {'user': user, 'orders': orders}
         return render(request, 'cake/lk-order.html', context)
-    return render(request, 'registration/template.html')
+    return redirect(reverse('cake:index'))
 
 
 def get_catalog(request, slug=None):
@@ -47,8 +44,8 @@ def get_catalog(request, slug=None):
 
 def payment(request):
     """Оплата заказа."""
-    Configuration.account_id = env.int('YOOKASSA_ACCOUNT_ID')
-    Configuration.secret_key = env.str('YOOKASSA_SECRET_KEY')
+    Configuration.account_id = YOOKASSA_ACCOUNT_ID
+    Configuration.secret_key = YOOKASSA_SECRET_KEY
 
     payment = Payment.create({
         "amount": {
