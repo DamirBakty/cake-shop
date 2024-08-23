@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% csrf_token %}
 {% block title %} Главная страница {% endblock %}
 {% block content %}
     <main>
@@ -261,10 +262,13 @@
                                       style="resize: none"></textarea>
                         </div>
                         <div class="d-flex justify-content-end">
-                            <button type="submit"
-                                    class="btn text-white rounded-pill mt-3 shadow-none cake__button cake__bg_pink">
-                                Подтвердить
-                            </button>
+                            <form action='{% url "cake:payment" %}' method="post">{% csrf_token %}
+                                <button type="submit"
+                                        class="btn text-white rounded-pill mt-3 shadow-none cake__button cake__bg_pink">
+                                    Подтвердить
+                                </button>
+                                <p class="cake_grey mt-3">Номер тестовой карты: 5555 5555 5555 4477. В качестве срока действия укажите любую дату (но больше текущей), CVC - любое число.</p>
+                            </form>
                             <a href="#step4" ref="ToStep4" class="d-none"></a>
                         </div>
                     </v-form>

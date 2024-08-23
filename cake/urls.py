@@ -1,6 +1,6 @@
 from django.urls import path
 
-from cake.views import get_catalog, index, account, orders
+from cake.views import get_catalog, index, account, orders, payment
 
 app_name = 'cake'
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path('orders/', orders, name='orders'),
     path('catalog/', get_catalog, name='catalog'),
     path('catalog/<slug:slug>/', get_catalog, name='catalog_reason'),
+    path('payment/', payment, name='payment'),
 ]
