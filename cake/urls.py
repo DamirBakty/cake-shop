@@ -3,6 +3,7 @@ from django.urls import path
 from cake.views import get_catalog, index, account, orders, payment
 
 app_name = 'cake'
+
 urlpatterns = [
     path('', index, name='index'),
     path('account/', account, name='account'),

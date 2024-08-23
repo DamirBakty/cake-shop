@@ -9,6 +9,7 @@ from cake_shop.settings import YOOKASSA_ACCOUNT_ID, YOOKASSA_SECRET_KEY
 
 
 def index(request):
+    """Главная страница."""
     return render(request, 'cake/index.html')
 
 
@@ -43,10 +44,9 @@ def get_catalog(request, slug=None):
 
 
 def payment(request):
-    """Оплата заказа."""
+    """Создание заказа и оплата."""
     Configuration.account_id = YOOKASSA_ACCOUNT_ID
     Configuration.secret_key = YOOKASSA_SECRET_KEY
-
     payment = Payment.create({
         "amount": {
             "value": "100",  # str(order.total_price)
