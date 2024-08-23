@@ -18,7 +18,7 @@ def register(request):
             user = authenticate(username=existing_user.username)
             if user:
                 login(request, user)
-                return redirect('some_view_name')
+                return redirect(reverse('cake:index'))
         except User.DoesNotExist:
             form = RegistrationForm(request.POST)
             if form.is_valid():
