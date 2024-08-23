@@ -1,5 +1,7 @@
+import datetime
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -91,7 +93,6 @@ class Cake(models.Model):
         ('birthday', 'На день рождения'),
         ('wedding', 'На свадьбу'),
     ]
-
     title = models.CharField(
         'Название',
         max_length=100,
@@ -165,21 +166,28 @@ class Cake(models.Model):
 
 class OrderQuerySet(models.QuerySet):
     """Пользовательский класс QuerySet для модели Order."""
-    def get_delivery_time(self):
-        """Вычислить дату и время доставки."""
-        pass
-
     def is_fast_delivery(self):
         """Определить, что доставка срочная"""
-        pass
+        if self.delivery_time - self.created_date < datetime.timedelta(days=1):
+            return True
 
     def get_total_price(self):
         """Вычислить и записать стоимость заказа."""
-        pass
+        total_price = self.cake.price
+        if self.inscription:
+            total_price += EXTRA_PRICES['inscription']
+        if self.fast_delivery:
+            total_price *= EXTRA_PRICES['express_coefficient']
+        self.update(total_price=total_price)
 
 
 class Order(models.Model):
     """Модель заказа."""
+    STATUSES = [
+        ('payment', 'В оплате'),
+        ('delivery', 'В доставке'),
+        ('complete', 'Завершен'),
+    ]
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -187,6 +195,10 @@ class Order(models.Model):
         verbose_name='Пользователь',
     )
     comment = models.TextField('Комментарий', blank=True, null=True,)
+    created_date = models.DateTimeField(
+        'Дата создания заказа',
+        auto_now_add=True,
+    )
     delivery_time = models.DateTimeField(
         'Время доставки',
         blank=True,
@@ -208,6 +220,14 @@ class Order(models.Model):
     )
     total_price = models.FloatField('Конечная цена', blank=True, null=True)
     fast_delivery = models.BooleanField('Быстрая доставка', default=False)
+    status = models.CharField(
+        'Статус заказа',
+        max_length=50,
+        choices=STATUSES,
+        blank=False,
+        null=False,
+        default='payment',
+    )
     objects = OrderQuerySet.as_manager()
 
     class Meta:
@@ -216,6 +236,35 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Заказ клиента {self.user.username} {self.user.phone}'
+
+    def clean(self):
+        """Для выведения ошибки в админке"""
+        if (self.delivery_time and self.created_date and self.delivery_time
+                < self.created_date):
+            raise ValidationError('Неверная дата доставки')
+
+    def save(self):
+        """
+        Получить стоимость заказа и дату доставки при сохранении.
+        Определение статуса срочной доставки.
+        """
+        total_price = self.cake.price
+        if self.inscription:
+            total_price += EXTRA_PRICES['inscription']
+        if self.fast_delivery:
+            total_price *= EXTRA_PRICES['express_coefficient']
+        self.total_price = total_price
+
+        if not self.delivery_time:
+            self.created_date = datetime.datetime.now()
+            self.delivery_time = self.created_date + datetime.timedelta(days=2)
+        if self.delivery_time < self.created_date:
+            return super(Order, self).clean()
+
+        if self.delivery_time - self.created_date < datetime.timedelta(days=1):
+            self.fast_delivery = True
+
+        super(Order, self).save()
 
     @admin.display(description='Адрес')
     def get_address(self):

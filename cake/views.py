@@ -1,6 +1,14 @@
-from django.shortcuts import render
+import uuid
 
-from cake.models import Cake
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from environs import Env
+from yookassa import Configuration, Payment
+
+from cake.models import Cake, Order
+
+env = Env()
+env.read_env()
 
 
 def index(request):
@@ -12,7 +20,12 @@ def account(request):
 
 
 def orders(request):
-    return render(request, 'cake/lk-order.html')
+    user = request.user
+    if request.user.is_authenticated:
+        orders = Order.objects.filter(user=user)
+        context = {'user': user, 'orders': orders}
+        return render(request, 'cake/lk-order.html', context)
+    return render(request, 'registration/template.html')
 
 
 def get_catalog(request, slug=None):
@@ -30,3 +43,24 @@ def get_catalog(request, slug=None):
     title = REASONS.get(slug)
     context = {'cakes': cakes, 'title': title}
     return render(request, 'cake/catalog.html', context)
+
+
+def payment(request):
+    """Оплата заказа."""
+    Configuration.account_id = env.int('YOOKASSA_ACCOUNT_ID')
+    Configuration.secret_key = env.str('YOOKASSA_SECRET_KEY')
+
+    payment = Payment.create({
+        "amount": {
+            "value": "100",  # str(order.total_price)
+            "currency": "RUB"
+        },
+        "confirmation": {
+            "type": "redirect",
+            "return_url": "http://127.0.0.1:8000/",
+        },
+        "capture": True,
+        "description": "Оплата заказа"
+    }, uuid.uuid4())
+
+    return HttpResponseRedirect(payment.confirmation.confirmation_url)
