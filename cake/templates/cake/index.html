@@ -63,11 +63,9 @@
 
                         <div class="modal-footer d-flex flex-column justify-content-between align-items-center text-center border-0 mx-5">
                             <p class="fs_12 cake_grey">
-                                `Нажимая на кнопку, вы соглашаетесь на <a
-                                    href="{% static 'cake/docs/soglasie.pdf' %}" target="_blank"
-                                    class="fs_12 cake_grey">обработку персональных данных </a>
-                                в соответствии с политикой конфиденциальности`
-                                05:00` : ``
+                                Нажимая на кнопку, вы соглашаетесь на 
+                                    <a href="{% static 'cake/docs/soglasie.pdf' %}" target="_blank" class="fs_12 cake_grey">обработку персональных данных</a>
+                                в соответствии с политикой конфиденциальности
                             </p>
                             <a href="#" v-if="Step === `Code`" @click.prevent="ToRegStep1"
                                class="text-decoration-none cake_pink fs_12">изменить данные
@@ -342,7 +340,6 @@
                                 <div class="row">
                                     <div class="col-6 col-lg-4 d-flex flex-column">
                                         <label for="name" class="my-1 fs_40 cake_blue">Имя</label>
-                                        <label for="phone" class="my-1 fs_40 cake_blue">Телефон</label>
                                         <label for="email" class="my-1 fs_40 cake_blue">Почта</label>
                                     </div>
                                     <div class="col-6 col-lg-4 d-flex flex-column">
@@ -353,16 +350,6 @@
                                             </v-field>
                                             <v-field v-model="Name" type="text" name="name_format" class="d-none"></v-field>
                                             <error-message name="name_format"
-                                                class="position-absolute bottom-0 cake_pink fs_12">
-                                            </error-message>
-                                        </div>
-                                        <div class="position-relative pb-1">
-                                            <v-field v-model="Phone" :class="Phone ? 'cake__border_blue': ''" type="tel"
-                                                name="phone" id="phone" placeholder="Введите номер"
-                                                class="form-control my-3 cake__textinput">
-                                            </v-field>
-                                            <v-field v-model="Phone" type="phone" name="phone_format" class="d-none"></v-field>
-                                            <error-message name="phone_format"
                                                 class="position-absolute bottom-0 cake_pink fs_12">
                                             </error-message>
                                         </div>
