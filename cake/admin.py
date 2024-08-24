@@ -18,7 +18,12 @@ class CakeAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'cake', 'get_address', 'get_phone',)
-    readonly_fields = ('total_price', 'created_date', 'fast_delivery')
+    readonly_fields = (
+        'total_price',
+        'created_date',
+        'fast_delivery',
+        'status',
+    )
 
 
 @admin.register(Advertising)
