@@ -2,7 +2,7 @@ import uuid
 
 import datetime
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render
 from django.utils import timezone
 from yookassa import Configuration, Payment
 
@@ -16,16 +16,11 @@ def index(request):
 
 
 def account(request):
-    return render(request, 'cake/lk.html')
-
-
-def orders(request):
+    """Личный кабинет."""
     user = request.user
-    if request.user.is_authenticated:
-        orders = Order.objects.filter(user=user)
-        context = {'user': user, 'orders': orders}
-        return render(request, 'cake/lk-order.html', context)
-    return redirect(reverse('cake:index'))
+    orders = Order.objects.filter(user=user)
+    context = {'user': user, 'orders': orders}
+    return render(request, 'cake/lk.html', context)
 
 
 def get_catalog(request, slug=None):
