@@ -23,7 +23,6 @@ class OrderAdmin(admin.ModelAdmin):
         'total_price',
         'created_date',
         'fast_delivery',
-        'status',
     )
 
 
