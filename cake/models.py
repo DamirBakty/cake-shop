@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 EXTRA_PRICES = {
@@ -151,7 +152,7 @@ class Cake(models.Model):
             return f'{self.title} {self.id}'
         return self.title
 
-    def save(self):
+    def save(self, *args, **kwargs):
         """Вычислить и записать стоимость торта при сохранении."""
         price = (
             EXTRA_PRICES['levels'][str(self.levels_number)] +
@@ -171,15 +172,6 @@ class OrderQuerySet(models.QuerySet):
         if self.delivery_time - self.created_date < datetime.timedelta(days=1):
             return True
 
-    def get_total_price(self):
-        """Вычислить и записать стоимость заказа."""
-        total_price = self.cake.price
-        if self.inscription:
-            total_price += EXTRA_PRICES['inscription']
-        if self.fast_delivery:
-            total_price *= EXTRA_PRICES['express_coefficient']
-        self.update(total_price=total_price)
-
 
 class Order(models.Model):
     """Модель заказа."""
@@ -195,6 +187,11 @@ class Order(models.Model):
         verbose_name='Пользователь',
     )
     comment = models.TextField('Комментарий', blank=True, null=True,)
+    courier_comment = models.TextField(
+        'Комментарий курьеру',
+        blank=True,
+        null=True,
+    )
     created_date = models.DateTimeField(
         'Дата создания заказа',
         auto_now_add=True,
@@ -226,7 +223,7 @@ class Order(models.Model):
         choices=STATUSES,
         blank=False,
         null=False,
-        default='payment',
+        # default='payment',
     )
     objects = OrderQuerySet.as_manager()
 
@@ -237,13 +234,22 @@ class Order(models.Model):
     def __str__(self):
         return f'Заказ клиента {self.user.username} {self.user.phone}'
 
+    def get_total_price(self):
+        """Вычислить и записать стоимость заказа."""
+        total_price = self.cake.price
+        if self.inscription:
+            total_price += EXTRA_PRICES['inscription']
+        if self.fast_delivery:
+            total_price *= EXTRA_PRICES['express_coefficient']
+        self.update(total_price=total_price)
+
     def clean(self):
         """Для выведения ошибки в админке"""
         if (self.delivery_time and self.created_date and self.delivery_time
                 < self.created_date):
             raise ValidationError('Неверная дата доставки')
 
-    def save(self):
+    def save(self, *args, **kwargs):
         """
         Получить стоимость заказа и дату доставки при сохранении.
         Определение статуса срочной доставки.
@@ -256,7 +262,7 @@ class Order(models.Model):
         self.total_price = total_price
 
         if not self.delivery_time:
-            self.created_date = datetime.datetime.now()
+            self.created_date = timezone.now()
             self.delivery_time = self.created_date + datetime.timedelta(days=2)
         if self.delivery_time < self.created_date:
             return super(Order, self).clean()

@@ -13,12 +13,18 @@ env.read_env()
 @admin.register(Cake)
 class CakeAdmin(admin.ModelAdmin):
     readonly_fields = ('price',)
+    list_filter = ('is_base',)
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'cake', 'get_address', 'get_phone',)
-    readonly_fields = ('total_price', 'created_date', 'fast_delivery')
+    list_display = ('id', 'cake', 'get_address', 'get_phone', 'status')
+    readonly_fields = (
+        'total_price',
+        'created_date',
+        'fast_delivery',
+        'status',
+    )
 
 
 @admin.register(Advertising)
