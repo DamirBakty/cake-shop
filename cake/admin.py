@@ -3,7 +3,7 @@ from django.contrib import admin
 import requests
 from environs import Env
 
-from .models import Advertising, Cake, Order
+from .models import Advertising, Cake, Order, Promo
 
 
 env = Env()
@@ -46,3 +46,9 @@ class AdvertisingAdmin(admin.ModelAdmin):
             ad.responses = response.json()["clicks"]
         Advertising.objects.bulk_update(advertising, ['responses'])
         return super().changelist_view(request, extra_context=extra_context)
+
+
+@admin.register(Promo)
+class PromoAdmin(admin.ModelAdmin):
+    list_display = ('title', 'discount', 'is_active')
+    list_filter = ('is_active',)

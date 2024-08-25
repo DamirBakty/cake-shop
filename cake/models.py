@@ -2,6 +2,7 @@ import datetime
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -225,6 +226,7 @@ class Order(models.Model):
         null=False,
         # default='payment',
     )
+    discount = models.IntegerField('Скидка', blank=True, null=True)
     objects = OrderQuerySet.as_manager()
 
     class Meta:
@@ -259,6 +261,8 @@ class Order(models.Model):
             total_price += EXTRA_PRICES['inscription']
         if self.fast_delivery:
             total_price *= EXTRA_PRICES['express_coefficient']
+        if self.discount:
+            total_price *= 1 - self.discount / 100
         self.total_price = total_price
 
         if not self.delivery_time:
@@ -295,3 +299,23 @@ class Advertising(models.Model):
     class Meta:
         verbose_name = 'Реклама'
         verbose_name_plural = 'Реклама'
+
+
+class Promo(models.Model):
+    """Модель промокода."""
+    title = models.CharField('Промокод', max_length=50)
+    discount = models.IntegerField(
+        'Скидка в %',
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(0),
+        ]
+    )
+    is_active = models.BooleanField('Активен', default=False)
+
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
+
+    def __str__(self):
+        return f'Промокод {self.title} со скидкой {self.discount}%'

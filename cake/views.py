@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from yookassa import Configuration, Payment
 
-from cake.models import Cake, Order
+from cake.models import Cake, Order, Promo
 from cake_shop.settings import YOOKASSA_ACCOUNT_ID, YOOKASSA_SECRET_KEY
 
 
@@ -63,7 +63,7 @@ def current_order(request):
             berries=berries,
             decor=decor,
         )
-    order = Order.objects.create(
+    order = Order.objects.get_or_create(
         cake=cake,
         inscription=inscription,
         user=request.user,
@@ -106,6 +106,13 @@ def payment(request):
     order.courier_comment = request.POST.get('courier_comment')
     order.delivery_time = delivery_time
     order.fast_delivery = fast_delivery
+
+    promo_input = request.GET.get('promo')
+    if promo_input:
+        promo = Promo.objects.get(title=promo_input)
+        if promo:
+            order.discount = promo.discount
+
     order.save()
 
     Configuration.account_id = YOOKASSA_ACCOUNT_ID
