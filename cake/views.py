@@ -47,24 +47,26 @@ def get_catalog(request, slug=None):
 
 def current_order(request):
     """Подтверждение текущего заказа."""
-    # if request.POST.get('cake'):
-    # return
-    levels_number = request.POST.get('lvls')
-    shape = request.POST.get('form')
-    topping = request.POST.get('topping')
-    berries = request.POST.get('berries')
-    decor = request.POST.get('decor')
-    inscription = request.POST.get('words')
-    comment = request.POST.get('comment')
-
-    cake = Cake.objects.create(
-        levels_number=int(levels_number),
-        shape=shape,
-        topping=topping,
-        berries=berries,
-        decor=decor,
-    )
-
+    cake_id = request.GET.get('cake_id', None)
+    if cake_id:
+        cake = Cake.objects.get(id=cake_id)
+        inscription = None
+        comment = None
+    else:
+        levels_number = request.POST.get('lvls')
+        shape = request.POST.get('form')
+        topping = request.POST.get('topping')
+        berries = request.POST.get('berries')
+        decor = request.POST.get('decor')
+        inscription = request.POST.get('words')
+        comment = request.POST.get('comment')
+        cake = Cake.objects.create(
+            levels_number=int(levels_number),
+            shape=shape,
+            topping=topping,
+            berries=berries,
+            decor=decor,
+        )
     order = Order.objects.create(
         cake=cake,
         inscription=inscription,
