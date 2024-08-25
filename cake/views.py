@@ -19,7 +19,8 @@ def account(request):
     """Личный кабинет."""
     user = request.user
     orders = Order.objects.filter(user=user)
-    context = {'user': user, 'orders': orders}
+    history = Order.objects.filter(user=user, status='complete')
+    context = {'user': user, 'orders': orders, 'history': history}
     return render(request, 'cake/lk.html', context)
 
 
