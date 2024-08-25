@@ -9,6 +9,9 @@
                 <div class="d-flex flex-column position-relative pb-5">
                     <h2 class="fs_40 font_Gogh cake_blue text-center align-self-center">Оформление заказа</h2>
                 </div>
+                <div class="d-flex flex-column position-relative pb-4">
+                    <h2 class="fs_40 cake_pink">Персональные данные</h2>
+                </div>
                 <div class="row">
                     <div class="col-6 col-lg-4 d-flex flex-column">
                         <label for="name" class="my-1 fs_40 cake_blue">Имя</label>
@@ -25,6 +28,9 @@
                     <div class="col-12 col-lg-4 d-flex justify-content-center justify-content-lg-end">
                         <div class="cake__card p-4 position-relative cake_grey">
                             <span class="cake__badge rounded-pill">?</span>
+                            {% if order.cake.is_base %}
+                                <span>Название: {{ order.cake.title }}</span>
+                            {% endif %}    
                             <span>Количество уровней: {{ order.cake.get_levels_number_display }}</span>
                             <span>Форма уровней: {{ order.cake.get_shape_display }}</span>
                             <p>Топинг: {{ order.cake.get_topping_display }}</p>
@@ -43,6 +49,18 @@
                         </div>
                     </div>
                 </div>
+
+                {% if order.cake.is_base %}
+                <div class="row mb-3">
+                    <div class="d-flex flex-column position-relative pb-4">
+                        <h2 class="fs_40 cake_pink">Надпись на торт</h2>
+                    </div>
+                    <div class="col-7 col-md-8 col-lg-8 pt-2">
+                        <input type="text" name="words" id="words" placeholder="Например: «С днем рождения!»..." class="form-control cake__textinput">
+                    </div>
+                </div>
+                {% endif %}
+
                 <div class="d-flex flex-column position-relative pb-4">
                     <h2 class="fs_40 cake_pink">Данные для доставки</h2>
                 </div>

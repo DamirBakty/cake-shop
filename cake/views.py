@@ -100,6 +100,8 @@ def payment(request):
 
     order = Order.objects.get(id=request.POST.get('order_id'))
     order.status = 'delivery'
+    if not order.inscription:
+        order.inscription = request.POST.get('words')
     order.courier_comment = request.POST.get('courier_comment')
     order.delivery_time = delivery_time
     order.fast_delivery = fast_delivery

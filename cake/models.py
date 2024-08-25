@@ -223,7 +223,7 @@ class Order(models.Model):
         choices=STATUSES,
         blank=False,
         null=False,
-        default='payment',
+        # default='payment',
     )
     objects = OrderQuerySet.as_manager()
 
