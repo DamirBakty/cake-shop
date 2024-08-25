@@ -116,7 +116,7 @@ def payment(request):
         },
         "confirmation": {
             "type": "redirect",
-            "return_url": "http://127.0.0.1:8000/",
+            "return_url": "http://87.228.18.76:80/",
         },
         "capture": True,
         "description": "Оплата заказа"
