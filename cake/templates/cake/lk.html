@@ -49,6 +49,14 @@
                                        aria-describedby="phone-label">
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="phone-label">Почта</span>
+                                <input type="text" value="{{ request.user.email }}" name="email" class="form-control"
+                                       placeholder="Введите вашу почту" aria-label="Номер"
+                                       aria-describedby="phone-label">
+                            </div>
+                        </div>
 
                         <button type="submit" class="btn btn-success w-100">Сохранить</button>
                     </form>

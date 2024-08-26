@@ -16,5 +16,6 @@ class UserProfileForm(forms.ModelForm):
         fields = (
             'first_name',
             'phone',
-            'address'
+            'address',
+            'email'
         )
