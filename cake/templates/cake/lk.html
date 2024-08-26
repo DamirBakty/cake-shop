@@ -19,30 +19,48 @@
                     <div class="d-flex w-100 justify-content-center justify-content-xxl-between align-items-center">
                         <h1 class="font_Gogh fs_40 cake_blue">Личный кабинет</h1>
                     </div>
-                    <div class="d-flex">
-                        <ul class="list-group">
-                            <li class="list-group-item border-0 ps-0">
-                                <span class="fs_40 cake_blue">Имя</span>
-                            </li>
-                            <li class="list-group-item border-0 ps-0">
-                                <h1 class="fs_40 cake_blue">Телефон</h1>
-                            </li>
-                            <li class="list-group-item border-0 ps-0">
-                                <h1 class="fs_40 cake_blue">Почта</h1>
-                            </li>
-                        </ul>
-                        <ul class="list-group">
-                            <li class="list-group-item border-0 py-61 position-relative">
-                                <span class="form-control my-2 i cake__textinput">{{ user.username }}</span>
-                            </li>
-                            <li class="list-group-item border-0 py-61 position-relative">
-                                <span class="form-control my-2 i cake__textinput">{{ user.phone }}</span>
-                            </li>
-                            <li class="list-group-item border-0 py-61 position-relative">
-                                <span class="form-control my-2 i cake__textinput">{{ user.email }}</span>
-                            </li>
-                        </ul>
-                    </div>
+                    <form method="post" action="{% url 'user:profile' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="first-name-label">Имя</span>
+                                <input type="text" value="{{ request.user.first_name }}" name="first_name"
+                                       class="form-control"
+                                       placeholder="Введите ваше имя" aria-label="Имя"
+                                       aria-describedby="first-name-label">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="address-label">Адрес</span>
+                                <input type="text" value="{{ request.user.address }}" name="address"
+                                       class="form-control"
+                                       placeholder="Введите ваш адрес" aria-label="Адрес"
+                                       aria-describedby="address-label">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="phone-label">Номер</span>
+                                <input type="text" value="{{ request.user.phone }}" name="phone" class="form-control"
+                                       placeholder="Введите ваш номер телефона" aria-label="Номер"
+                                       aria-describedby="phone-label">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text" id="phone-label">Почта</span>
+                                <input type="text" value="{{ request.user.email }}" name="email" class="form-control"
+                                       placeholder="Введите вашу почту" aria-label="Номер"
+                                       aria-describedby="phone-label">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">Сохранить</button>
+                    </form>
+
                 </v-form>
                 <h2 class="fs_40 cake_pink mt-5">Мои заказы</h2>
                 {% if orders %}
@@ -50,17 +68,18 @@
                         <section class="my-2">
                         <span class="cake_blue lk__order d-flex" data-bs-toggle="modal" data-bs-target="#OrderModal2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                                class="bi bi-clock-fill" viewBox="0 0 16 16">
+                                 class="bi bi-clock-fill" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
                             </svg>
-                            <span class="ms-1">#{{ order.id }} {{order.cake.title}}</span>
+                            <span class="ms-1">#{{ order.id }} {{ order.cake.title }}</span>
                         </span>
                             <aside class="modal fade" id="OrderModal2" tabindex="-1" aria-labelledby="ModalLabel2"
-                                aria-hidden="true">
+                                   aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title cake_pink" id="ModalLabel2">#{{ order.id }} {{order.cake.title}}</h5>
+                                            <h5 class="modal-title cake_pink" id="ModalLabel2">
+                                                #{{ order.id }} {{ order.cake.title }}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                         </div>
@@ -68,7 +87,7 @@
                                             <span class="cake_blue">Уровней: {{ order.cake.levels_number }}</span><br>
                                             <span class="cake_blue">Форма: {{ order.cake.get_shape_display }}</span><br>
                                             <span class="cake_blue">
-                                                Топпинг: 
+                                                Топпинг:
                                                 {% if order.cake.topping == 'no_topping' %}
                                                     без
                                                 {% else %}
@@ -92,7 +111,7 @@
                                                 {% endif %}
                                             </span><br>
                                             <span class="cake_blue">
-                                                Надпись: 
+                                                Надпись:
                                                 {% if order.inscription %}
                                                     {{ order.inscription }}
                                                 {% else %}
@@ -127,17 +146,18 @@
                         <section class="my-2">
                         <span class="cake_blue lk__order d-flex" data-bs-toggle="modal" data-bs-target="#OrderModal2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-                                class="bi bi-clock-fill" viewBox="0 0 16 16">
+                                 class="bi bi-clock-fill" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
                             </svg>
-                            <span class="ms-1">#{{ order.id }} {{order.cake.title}}, {{ order.delivery_time.date }}</span>
+                            <span class="ms-1">#{{ order.id }} {{ order.cake.title }}, {{ order.delivery_time.date }}</span>
                         </span>
                             <aside class="modal fade" id="OrderModal2" tabindex="-1" aria-labelledby="ModalLabel2"
-                                aria-hidden="true">
+                                   aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title cake_pink" id="ModalLabel2">#{{ order.id }} {{order.cake.title}}</h5>
+                                            <h5 class="modal-title cake_pink" id="ModalLabel2">
+                                                #{{ order.id }} {{ order.cake.title }}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                         </div>
@@ -145,7 +165,7 @@
                                             <span class="cake_blue">Уровней: {{ order.cake.levels_number }}</span><br>
                                             <span class="cake_blue">Форма: {{ order.cake.get_shape_display }}</span><br>
                                             <span class="cake_blue">
-                                                Топпинг: 
+                                                Топпинг:
                                                 {% if order.cake.topping == 'no_topping' %}
                                                     без
                                                 {% else %}
@@ -169,7 +189,7 @@
                                                 {% endif %}
                                             </span><br>
                                             <span class="cake_blue">
-                                                Надпись: 
+                                                Надпись:
                                                 {% if order.inscription %}
                                                     {{ order.inscription }}
                                                 {% else %}

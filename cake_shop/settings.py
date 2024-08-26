@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env.str('SECRET_KEY')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/cakes/')
 MEDIA_URL = '/media/'
 
 DEBUG = env.bool('DEBUG', False)
@@ -92,12 +92,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'cake/static'),
+    os.path.join(BASE_DIR, '/cake/static'),
 )
 
 # LOGIN_URL = 'user:login'
 # LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = 'user:login'
+LOGOUT_REDIRECT_URL = 'cake:index'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -105,3 +105,8 @@ AUTH_USER_MODEL = "user.User"
 
 YOOKASSA_ACCOUNT_ID = env.int('YOOKASSA_ACCOUNT_ID')
 YOOKASSA_SECRET_KEY = env.str('YOOKASSA_SECRET_KEY')
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
