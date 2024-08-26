@@ -97,7 +97,7 @@ STATICFILES_DIRS = (
 
 # LOGIN_URL = 'user:login'
 # LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = 'user:login'
+LOGOUT_REDIRECT_URL = 'cake:index'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

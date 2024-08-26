@@ -1,6 +1,8 @@
 import uuid
 
 import datetime
+
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
@@ -15,12 +17,17 @@ def index(request):
     return render(request, 'cake/index.html')
 
 
+@login_required
 def account(request):
     """Личный кабинет."""
     user = request.user
     orders = Order.objects.filter(user=user)
     history = Order.objects.filter(user=user, status='complete')
-    context = {'user': user, 'orders': orders, 'history': history}
+    context = {
+        'user': user,
+        'orders': orders,
+        'history': history
+    }
     return render(request, 'cake/lk.html', context)
 
 
@@ -37,7 +44,10 @@ def get_catalog(request, slug=None):
     else:
         cakes = base_cakes
     title = REASONS.get(slug)
-    context = {'cakes': cakes, 'title': title}
+    context = {
+        'cakes': cakes,
+        'title': title
+    }
     return render(request, 'cake/catalog.html', context)
 
 
